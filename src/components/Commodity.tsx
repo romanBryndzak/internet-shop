@@ -1,15 +1,26 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {iProduct} from "../models";
 
 
 const Commodity = ({products}: { products: Array<iProduct> }) => {
 
+    const [isDetails, setIsDetails] = useState(false);
+    const [indexProduct, setIndexProduct] = useState(0);
+
+    const onClickDetails = (e: any, ind: number) => {
+        setIsDetails(prev => !prev);
+        setIndexProduct(ind);
+    };
+
+    const classHied = "w-24 rounded-md bg-yellow-300";
+    const classShow = "w-24 rounded-md bg-green-300";
+
     return (
-        <div className=" border py-2 px-2 rounded flex items-center flex-col mb-2">
-            {products.map((product: iProduct) => {
+        <div className="border py-2 px-2 rounded flex items-center flex-col mb-2">
+            {products.map((product: iProduct, index) => {
                 return (
                     <div
-                        className=" border border-amber-800 py-2 px-2 rounded flex items-center flex-col mb-4 min-w-full"
+                        className="border border-amber-800 py-2 px-2 rounded flex items-center flex-col mb-4 min-w-full"
                         key={product.title}>
                         <div>{product.title}</div>
                         <div className="border py-2 px-2 rounded flex items-center flex-row m-3">
@@ -25,13 +36,16 @@ const Commodity = ({products}: { products: Array<iProduct> }) => {
                                     </div>
                                 </div>
                                 <div className="flex items-center flex-row mx-3 my-2 justify-between">
-                                    <div className="flex items-center flex-row ">
+                                    <div className="flex items-center flex-row">
                                         <h4>Category:</h4><p className="text-xs ml-2">{product.category}.</p>
                                     </div>
+                                    <button className={isDetails && indexProduct === index ? classHied : classShow}
+                                            onClick={(e) => onClickDetails(e, index)}>
+                                        {isDetails && indexProduct === index ? "Hied Details" : "Show Details"}</button>
                                 </div>
                                 <div className="flex items-center flex-row mx-3 my-2">
-
-                                    <h4>Details:</h4><p className="text-xs ml-2">{product.description}.</p>
+                                    {isDetails && indexProduct === index &&
+                                        <p className="text-xs ml-2">{product.description}.</p>}
                                 </div>
                             </div>
                         </div>
