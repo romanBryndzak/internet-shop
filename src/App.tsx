@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import './App.css';
+import Commodity from "./components/Commodity";
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const [products, setData] = useState([]);
+
+    useEffect(() => {
+        fetch(`https://fakestoreapi.com/products?limit=20`)
+            .then(res => res.json())
+            .then((result) => {
+                setData(result)
+            })
+    }, []);
+
+    return (
+        <div className="container mx-auto max-w-2xl pt-5">
+            <Commodity products={products}/>
+        </div>
+    );
 }
 
 export default App;
