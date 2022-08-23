@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {iProduct} from "../models";
 
 
-const Commodity = ({products}: { products: Array<iProduct> }) => {
+const Commodity = ({products, setIsModal}: { products: Array<iProduct>, setIsModal: (b: boolean) => void }) => {
 
     const [isDetails, setIsDetails] = useState(false);
     const [indexProduct, setIndexProduct] = useState(0);
@@ -22,7 +22,12 @@ const Commodity = ({products}: { products: Array<iProduct> }) => {
                     <div
                         className="border border-amber-800 py-2 px-2 rounded flex items-center flex-col mb-4 min-w-full"
                         key={product.title}>
-                        <div>{product.title}</div>
+                        <div>{product.title}
+                            <button className="ml-2 py-1 px-2 rounded-md bg-orange-300 hover:bg-orange-200"
+                                    onClick={() => setIsModal(true)}>
+                                new
+                            </button>
+                        </div>
                         <div className="border py-2 px-2 rounded flex items-center flex-row m-3">
                             <img src={product.image} alt="product" className="max-h-32 w-24"/>
                             <div>

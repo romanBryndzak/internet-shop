@@ -1,33 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import Commodity from "./components/Commodity";
-import axios, {AxiosError} from "axios";
-import {iProduct} from "./models";
+import {useProducts} from "./hooks/useProducts";
+import Modal from "./components/Modal";
+import CreateProduct from "./components/CreateProduct";
 
 
 function App() {
-
-    const [products, setData] = useState<iProduct[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-
-    async function getProducts() {
-        setError('');
-        try {
-            setLoading(true);
-            const response = await axios.get<iProduct[]>(`https://fakestoreapi.com/products?limit=10`);
-            setData(response.data);
-            setLoading(false);
-        } catch (e: unknown) {
-            setLoading(false);
-            const error = e as AxiosError;
-            setError(error.message);
-        }
-    }
-
-    useEffect(() => {
-        getProducts();
-    }, []);
+    const {products, loading, error} = useProducts();
+    const [openModalCreate, setModalCreate] = useState(true);
 
     return (
         <div className="container mx-auto max-w-2xl pt-5">
@@ -36,8 +17,12 @@ function App() {
             </div>}
             {error && products.length === 0 &&
                 <p className="text-center mt-32 font-sans text-2xl">{error}</p>}
-            {!loading && products.length > 0 && <Commodity products={products}/>}
-
+            {!loading && products.length > 0 && <Commodity products={products} setIsModal={setModalCreate}/>}
+            {openModalCreate &&
+                <Modal setIsModal={setModalCreate} title='Create Product'>
+                    <CreateProduct/>
+                </Modal>
+            }
         </div>
     );
 }
