@@ -1,13 +1,45 @@
-import React from 'react';
-import {IdProduct} from "../models";
+import React, {useEffect, useState} from 'react';
+import {ProductProperties} from "../models";
 import axios from "axios";
 import {api} from "../hooks/useProducts";
 
 interface CreateProductProps {
-    onCreate: (payload: IdProduct) => void
+    onCreate: (payload: ProductProperties) => void
+    isCreate: boolean
+    idProduct: number
+    product: ProductProperties
 }
 
-const CreateProduct = ({onCreate}: CreateProductProps) => {
+const RenderInput = (
+    isCreate: boolean, value: string | number, type: string, title: string,
+    required: boolean, placeholder?: string, step?: string
+) => {
+
+    const [start, setValue] = useState<any>()
+
+    useEffect(() => {
+            setValue(value);
+    }, [value]);
+
+    return isCreate
+        ? <input type={type} className="border rounded-md py-1 px-3 pb-1 mt-2 mb-2 w-full outline-0"
+                 placeholder={`Please enter here ${title === 'description' ? title : placeholder} ...`}
+                 name={title}
+                 required={required}
+                 step={step}
+        />
+        : <input type={type} className="border rounded-md py-1 px-3 pb-1 mt-2 mb-2 w-full outline-0"
+                 placeholder={`Please enter here ${placeholder}`}
+                 name={title}
+                 required={required}
+                 step={step}
+                 value={start}
+                 onChange={(e: React.KeyboardEvent<HTMLInputElement>) => setValue(e.target.value)}
+        />
+}
+
+const CreateProduct = ({onCreate, isCreate, idProduct, product}: CreateProductProps) => {
+
 
     const handleSubmit = (e: any) => {
         //React.FormEvent
@@ -21,29 +53,25 @@ const CreateProduct = ({onCreate}: CreateProductProps) => {
                 category: e.target.category.value,
             }
             console.log(payload)
-            const response = axios.post<IdProduct>(`${api}`, payload);
-            response.then(res => onCreate(res.data))
+            if (isCreate) {
+                const response = axios.post<ProductProperties>(`${api}`, payload);
+                response.then(res => onCreate(res.data))
+            } else {
+                const response = axios.put<ProductProperties>(`${api}/${idProduct}`, payload);
+                response.then(res => onCreate(res.data))
+            }
         }
     }
 
-   // const changeValue = (e: React.KeyboardEvent<HTMLInputElement>) => {}
-
-    const renderInput = (type: string, placeholder: string, title: string, required: boolean, step?: string) => {
-        return <input type={type} className="border rounded-md py-1 px-3 pb-1 mt-2 mb-2 w-full outline-0"
-                      placeholder={placeholder}
-                      name={title}
-                      required={required}
-                      step={step}
-        />
-    }
+    // const changeValue = (e: React.KeyboardEvent<HTMLInputElement>) => {}
 
     return (
         <form onSubmit={handleSubmit}>
-            {renderInput("text", "Please enter here name...", 'title', true)}
-            {renderInput("number", "Please enter here price...", 'price', true, "0.01")}
-            {renderInput("text", "Please enter here description...", 'description', false)}
-            {renderInput("text", "Please enter here category...", 'category', true)}
-            {renderInput("text", "Please enter here image url...", 'image', true)}
+            {RenderInput(isCreate, product?.title, "text",  'title', true,"name")}
+            {RenderInput(isCreate, product?.price, "number", 'price', true, "price","0.01")}
+            {RenderInput(isCreate, product?.description, "text", 'description', false)}
+            {RenderInput(isCreate, product?.category, "text", 'category', true, "category")}
+            {RenderInput(isCreate, product?.image, "text", 'image', true, "image url")}
             <button type="submit"
                     className="py-2 px-4 rounded-md bg-yellow-300 hover:bg-yellow-100 hover:text-gray-400">
                 Creat
