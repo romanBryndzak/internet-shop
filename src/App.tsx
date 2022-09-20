@@ -1,14 +1,19 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import Commodity from "./components/Commodity";
-import {useProducts} from "./hooks/useProducts";
+import { useProducts} from "./hooks/useProducts";
 import Modal from "./components/Modal";
 import CreateProduct from "./components/CreateProduct";
-
+import {IdProduct} from "./models";
 
 function App() {
-    const {products, loading, error} = useProducts();
+    const {products, loading, error, createProduct} = useProducts();
     const [openModalCreate, setModalCreate] = useState(true);
+
+    const handlerCreate = (product: IdProduct) => {
+        setModalCreate(false);
+        createProduct(product);
+    };
 
     return (
         <div className="container mx-auto max-w-2xl pt-5">
@@ -20,7 +25,7 @@ function App() {
             {!loading && products.length > 0 && <Commodity products={products} setIsModal={setModalCreate}/>}
             {openModalCreate &&
                 <Modal setIsModal={setModalCreate} title='Create Product'>
-                    <CreateProduct/>
+                    <CreateProduct onCreate={handlerCreate}/>
                 </Modal>
             }
         </div>

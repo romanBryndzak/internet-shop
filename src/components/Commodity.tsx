@@ -1,8 +1,12 @@
 import React, {useState} from 'react';
-import {iProduct} from "../models";
+import {IdProduct} from "../models";
 
+interface CommodityProps{
+    products: Array<IdProduct>,
+    setIsModal: (b: boolean) => void
+}
 
-const Commodity = ({products, setIsModal}: { products: Array<iProduct>, setIsModal: (b: boolean) => void }) => {
+const Commodity = ({products, setIsModal}: CommodityProps) => {
 
     const [isDetails, setIsDetails] = useState(false);
     const [indexProduct, setIndexProduct] = useState(0);
@@ -17,7 +21,7 @@ const Commodity = ({products, setIsModal}: { products: Array<iProduct>, setIsMod
 
     return (
         <div className="border py-2 px-2 rounded flex items-center flex-col mb-2">
-            {products.map((product: iProduct, index) => {
+            {products.map((product: IdProduct, index) => {
                 return (
                     <div
                         className="border border-amber-800 py-2 px-2 rounded flex items-center flex-col mb-4 min-w-full"
@@ -36,8 +40,8 @@ const Commodity = ({products, setIsModal}: { products: Array<iProduct>, setIsMod
                                         <h4>Price:</h4><p className="text-zinc-900 ml-2">{product.price}</p>
                                     </div>
                                     <div className="flex items-start flex-col">
-                                        <p className="text-sm">rate: {product.rating.rate}%</p>
-                                        <p className="text-sm">count: {product.rating.count}</p>
+                                        <p className="text-sm">rate: {product.rating?.rate}%</p>
+                                        <p className="text-sm">count: {product.rating?.count}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center flex-row mx-3 my-2 justify-between">
@@ -49,8 +53,8 @@ const Commodity = ({products, setIsModal}: { products: Array<iProduct>, setIsMod
                                         {isDetails && indexProduct === index ? "Hied Details" : "Show Details"}</button>
                                 </div>
                                 <div className="flex items-center flex-row mx-3 my-2">
-                                    {isDetails && indexProduct === index &&
-                                        <p className="text-xs ml-2">{product.description}.</p>}
+                                    {isDetails && indexProduct === index && product?.description !== '' &&
+                                        <p className="text-xs ml-2">{product?.description}.</p>}
                                 </div>
                             </div>
                         </div>
