@@ -20,10 +20,12 @@ function Products() {
     };
     const openCreateModal = () => {
         setModalCreate(true);
-        setIsCreate(true)
+        setIsCreate(true);
+        setIsPersonnel(true);
     }
+
     return (
-        <div className="container mx-auto max-w-2xl pt-5">
+        <div className="container mx-auto max-w-2xl pt-12">
             {loading && <div className="flex justify-center mt-32">
                 <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>}

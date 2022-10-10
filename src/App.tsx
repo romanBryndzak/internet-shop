@@ -7,8 +7,8 @@ import BasicMenu from "./components/BasicMenu";
 function App() {
     return (
         <>
-            <div className="h-[50px] flex justify-between items-center px-5 bg-orange-50 text-gray-700">
-                <span className="font-bold">Another</span>
+            <div className="fixed h-[40px] w-[100%] flex justify-between items-center px-5 bg-orange-50 text-gray-700">
+                <span className="font-bold">Internet shop</span>
                 <BasicMenu/>
             </div>
             <Routes>
